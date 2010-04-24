@@ -2,8 +2,14 @@ EVE Online Logo Generator.
 
 This python module lets you generate corporation logos.
 
+
 LICENSE:
 This software is released under the MIT license. See evelogo.py for details.
+
+
+REQUIREMENTS:
+- Python 2.x
+- Python Imaging Library 1.1.6 or better
 
 
 INSTALLATION:
