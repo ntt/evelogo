@@ -10,11 +10,16 @@ This software is released under the MIT license. See evelogo.py for details.
 REQUIREMENTS:
 - Python 2.x
 - Python Imaging Library 1.1.6 or better
+- Tyrannis Pre-rendered Corporation Logo Symbols pack.
 
 
 INSTALLATION:
 Place the evelogo.py either in your site-packages folder or in your project
 dir, whichever is appropriate for your project.
+
+Download the corplogos pack:
+
+   http://dl.eve-files.com/media/corp/Entity/corplogos.7z
 
 Extract the corplogos archive and place the corplogos folder anywhere you want.
 If you place it in your project's work folder, the module will work without
