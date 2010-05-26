@@ -25,6 +25,9 @@
 # OTHER DEALINGS IN THE SOFTWARE
 #
 #-----------------------------------------------------------------------------
+# Version: 1.1.0 (23 May 2010)
+# - Now uses (and requires) the large size logos added in Tyrannis.
+#
 # Version: 1.0.1 (08 December 2008)
 # - Fixed logos breaking that have only 1 or 2 shapes defined (Arkady)
 #
@@ -34,13 +37,19 @@
 # Requirements:
 #   Python 2.4+
 #   Python Image Library
-#   Prerendered Corp Logos
+#   Prerendered Tyrannis Corp Logos
 #
 
 import os
 from PIL import Image
 
 resourcePath = "corplogos"
+
+_folder = {
+	64: "small",
+	128: "medium",
+	256: "large",
+}
 
 def CorporationLogo(data, size=64, transparent=True, bgcolor=None):
 	"""Generates corp logo defined by the parameters in data object. The data
@@ -65,30 +74,39 @@ a background with the color of your choice if specified, otherwise black."""
 	else:
 		raise ValueError("Invalid logo data.")
 
-	if transparent:
-		logo = Image.new("RGBA", (64,64))
+	if size <= 64:
+		baseSize = 64
+	elif size <= 128:
+		baseSize = 128
 	else:
-		logo = Image.new("RGB", (64,64))
+		baseSize = 256
+
+	if transparent:
+		logo = Image.new("RGBA", (baseSize,baseSize))
+	else:
+		logo = Image.new("RGB", (baseSize,baseSize))
 		if bgcolor is not None:
-			logo.paste(bgcolor, (0,0,64,64))
+			logo.paste(bgcolor, (0,0,baseSize,baseSize))
+
+	path = os.path.join(resourcePath, _folder[baseSize])
 
 	if shape3:
-		layer3 = Image.open(os.path.join(resourcePath, str(color3), str(shape3) + ".png"))
+		layer3 = Image.open(os.path.join(path, str(color3), str(shape3) + ".png"))
 		logo.paste(layer3, (0,0), layer3)
 		p3 = layer3.load()
 	if shape2:
-		layer2 = Image.open(os.path.join(resourcePath, str(color2), str(shape2) + ".png"))
+		layer2 = Image.open(os.path.join(path, str(color2), str(shape2) + ".png"))
 		logo.paste(layer2, (0,0), layer2)
 		p2 = layer2.load()
 	if shape1:
-		layer1 = Image.open(os.path.join(resourcePath, str(color1), str(shape1) + ".png"))
+		layer1 = Image.open(os.path.join(path, str(color1), str(shape1) + ".png"))
 		logo.paste(layer1, (0,0), layer1)
 		p1 = layer1.load()
 
 	if transparent:
 		pix = logo.load()
-		for x in xrange(64):
-			for y in xrange(64):
+		for x in xrange(baseSize):
+			for y in xrange(baseSize):
 				r,g,b,a = pix[x,y]
 				a1 = ((255 - p1[x,y][3]) / 255.0) if shape1 else 1.0
 				a2 = ((255 - p2[x,y][3]) / 255.0) if shape2 else 1.0
@@ -97,7 +115,7 @@ a background with the color of your choice if specified, otherwise black."""
 				if a:
 					pix[x,y] = (int(r/a),int(g/a),int(b/a),int(255*a))
 
-	if size != 64:
+	if size != baseSize:
 		return logo.resize((size,size), Image.ANTIALIAS)
 
 	return logo
